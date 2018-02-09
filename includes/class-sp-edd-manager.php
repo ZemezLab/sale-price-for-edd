@@ -33,6 +33,31 @@ if ( ! class_exists( 'SP_EDD_Manager' ) ) {
 			add_filter( 'edd_get_price_option_amount', array( $this, 'rewrite_price_option_amount' ), 10, 3 );
 			add_filter( 'edd_add_to_cart_item', array( $this, 'update_cart_item' ) );
 			add_filter( 'edd_cart_item_price', array( $this, 'update_cart_price' ), 10, 3 );
+			add_filter( 'edd_download_price', array( $this, 'download_price' ), 90, 3 );
+		}
+
+		/**
+		 * Add sale price
+		 *
+		 * @param  [type] $price       [description]
+		 * @param  [type] $download_id [description]
+		 * @param  [type] $price_id    [description]
+		 * @return [type]              [description]
+		 */
+		public function download_price( $price, $download_id, $price_id ) {
+
+			$variations = edd_get_variable_prices( $download_id );
+			$variation  = $variations[ $price_id ];
+
+			if ( empty( $variation['sale_price'] ) ) {
+				return $price;
+			}
+
+			return sprintf(
+				'<del>%1$s</del><ins>%2$s</ins>',
+				edd_currency_filter( $variation['amount'] ),
+				$price
+			);
 		}
 
 		/**
