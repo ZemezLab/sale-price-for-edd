@@ -30,10 +30,10 @@ if ( ! class_exists( 'SP_EDD_Manager' ) ) {
 		 */
 		public function __construct() {
 			add_filter( 'edd_price_option_output', array( $this, 'rewrite_price_output' ), 10, 6 );
-			add_filter( 'edd_get_price_option_amount', array( $this, 'rewrite_price_option_amount' ), 10, 3 );
-			add_filter( 'edd_add_to_cart_item', array( $this, 'update_cart_item' ) );
-			add_filter( 'edd_cart_item_price', array( $this, 'update_cart_price' ), 10, 3 );
-			add_filter( 'edd_download_price', array( $this, 'download_price' ), 90, 3 );
+			add_filter( 'edd_get_price_option_amount', array( $this, 'rewrite_price_option_amount' ), 0, 3 );
+			add_filter( 'edd_add_to_cart_item', array( $this, 'update_cart_item' ), 0 );
+			add_filter( 'edd_cart_item_price', array( $this, 'update_cart_price' ), 0, 3 );
+			add_filter( 'edd_download_price', array( $this, 'download_price' ), 0, 3 );
 		}
 
 		/**
