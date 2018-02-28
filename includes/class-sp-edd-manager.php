@@ -33,7 +33,7 @@ if ( ! class_exists( 'SP_EDD_Manager' ) ) {
 			add_filter( 'edd_get_price_option_amount', array( $this, 'rewrite_price_option_amount' ), 0, 3 );
 			add_filter( 'edd_add_to_cart_item', array( $this, 'update_cart_item' ), 0 );
 			add_filter( 'edd_cart_item_price', array( $this, 'update_cart_price' ), 0, 3 );
-			add_filter( 'edd_download_price', array( $this, 'download_price' ), 0, 3 );
+			add_filter( 'edd_download_price', array( $this, 'download_price' ), 99, 3 );
 		}
 
 		/**
@@ -44,7 +44,24 @@ if ( ! class_exists( 'SP_EDD_Manager' ) ) {
 		 * @param  [type] $price_id    [description]
 		 * @return [type]              [description]
 		 */
-		public function download_price( $price, $download_id, $price_id ) {
+		public function download_price( $price, $download_id, $price_id = null ) {
+
+			if ( ! $price_id ) {
+
+				$price_amount = edd_get_download_price( $download_id );
+				$sale_price   = get_post_meta( $download_id, '_sale_price', true );
+
+				if ( ! $sale_price ) {
+					return $price;
+				} else {
+					return sprintf(
+						'<del>%1$s</del><ins>%2$s</ins>',
+						$price,
+						$sale_price
+					);
+				}
+
+			}
 
 			$variations = edd_get_variable_prices( $download_id );
 			$variation  = $variations[ $price_id ];
