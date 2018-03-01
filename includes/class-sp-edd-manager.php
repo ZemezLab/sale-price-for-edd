@@ -57,7 +57,7 @@ if ( ! class_exists( 'SP_EDD_Manager' ) ) {
 					return sprintf(
 						'<del>%1$s</del><ins>%2$s</ins>',
 						$price,
-						$sale_price
+						edd_currency_filter( $sale_price )
 					);
 				}
 
@@ -93,6 +93,12 @@ if ( ! class_exists( 'SP_EDD_Manager' ) ) {
 		 * @return [type]       [description]
 		 */
 		public function update_cart_item( $item ) {
+
+			$default_sale_price = get_post_meta( $item['id'], '_sale_price', true );
+
+			if ( ! empty( $default_sale_price ) ) {
+				$item['options']['sale_price'] = $default_sale_price;
+			}
 
 			if ( empty( $item['options']['price_id'] ) ) {
 				return $item;
